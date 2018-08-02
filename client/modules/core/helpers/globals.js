@@ -8,10 +8,11 @@ import { Roles } from "meteor/alanning:roles";
 
 /**
  * @method userId
- * @summary returns id linked to an Account doc
- * @return {Object} String
+ * @summary returns the logged in userId
+ * @return {String} String
  */
 export function getUserId() {
+  // The accountId linked to the logged-in profile data is used to find the user's Account doc
   if (Meteor.settings.public.keycloakEnabled) {
     const profileStr = localStorage.getItem("reaction_kc_profile");
     const profile = profileStr && JSON.parse(profileStr);
@@ -21,6 +22,7 @@ export function getUserId() {
       profile.attributes["reaction-account-id"][0];
   }
 
+  // This returns the userId for both logged in Meteor users and anonymous users
   return Meteor.userId();
 }
 
