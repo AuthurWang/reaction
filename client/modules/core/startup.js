@@ -19,7 +19,7 @@ Meteor.startup(() => {
 
   // initialize anonymous guest users
   Tracker.autorun(() => {
-    const userId = Meteor.userId();
+    const userId = Reaction.getUserId();
 
     // Load data from Accounts collection into the localStorage
     Tracker.nonreactive(() => {
@@ -83,7 +83,7 @@ Meteor.startup(() => {
   // Set up an autorun to get fine-grained reactivity on only the
   // user preferences
   Tracker.autorun(() => {
-    const userId = Meteor.userId();
+    const userId = Reaction.getUserId();
     if (!userId) return;
     const user = Meteor.users.findOne(userId, { fields: { profile: 1 } });
     userPrefs.set((user && user.profile && user.profile.preferences) || undefined);
