@@ -194,7 +194,13 @@ export default {
   get state() {
     return reactionState;
   },
-
+  /**
+  * @name keycloakAuth
+  * @returns {Boolean} Boolean
+  */
+  keycloakAuth() {
+    return true;
+  },
   /**
    * @name hasPermission
    * @summary client permissions checks. hasPermission exists on both the server and the client.
@@ -308,7 +314,19 @@ export default {
     // return false to be safe
     return false;
   },
+  /**
+  * @name isAuthorized
+  * @param {Array} meteorAuthParams - contains all the args needed to call hasPermission
+  * @param {Array} keycloakAuthParams - contains args needed to call the Keycloak auth func
+  * @returns {Boolean} boolean
+  */
+  isAuthorized({ keycloakAuthParams, meteorAuthParams }) {
+    if (Meteor.settings.public.keycloakEnabled) {
+      return this.keycloakAuth(keycloakAuthParams);
+    }
 
+    return this.hasPermission(...meteorAuthParams);
+  },
 
   /**
    * @name hasDashboardAccessForAnyShop
