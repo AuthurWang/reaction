@@ -25,7 +25,11 @@ Meteor.startup(() => {
 
         keycloak.loadUserProfile().success((profile) => {
           localStorage.setItem("reaction_kc_profile", JSON.stringify(profile));
-          Session.set("rc_userId", profile.attributes["reaction-meteor-id"][0]);
+          const accountId = profile.attributes["reaction-account-id"][0];
+          Session.set("rc_userId", accountId);
+
+          // Setup for method calls
+          Meteor.call("authKeycloak", { accountId, token: keycloak.token });
         }).error(() => {
           Logger.error("Failed to load profile");
         });
