@@ -21,6 +21,16 @@ Meteor.startup(() => {
     .success((authenticated) => {
       if (authenticated) {
         localStorage.setItem("reaction_kc_token", keycloak.token);
+
+        keycloak.loadUserProfile().success((profile) => {
+          localStorage.setItem("reaction_kc_profile", JSON.stringify(profile));
+        }).error(() => {
+          Logger.error("Failed to load profile");
+        });
+      } else {
+        // handle unauth
+        localStorage.removeItem("reaction_kc_profile");
+        localStorage.removeItem("reaction_kc_token");
       }
     })
     .error((error) => {
