@@ -15,7 +15,10 @@ class ReactionLayout extends Component {
 
   checkElementPermissions(block) {
     let permissions;
-    const hasAdminAccess = Reaction.hasAdminAccess();
+    const hasAdminAccess = Reaction.isAuthorized({
+      keycloakAuthParams: null,
+      meteorAuthParams: [["owner", "admin"], Reaction.getUserId()]
+    });
 
     if (hasAdminAccess === false) {
       permissions = block.audience || this.props.defaultAudience;
@@ -23,7 +26,10 @@ class ReactionLayout extends Component {
       permissions = block.permissions || this.props.defaultPermissions;
     }
 
-    return Reaction.hasPermission(permissions || []);
+    return Reaction.isAuthorized({
+      keycloakAuthParams: null,
+      meteorAuthParams: [permissions || [], Reaction.getUserId()]
+    });
   }
 
   renderLayout(children) {

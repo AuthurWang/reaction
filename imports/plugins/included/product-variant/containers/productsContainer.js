@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { compose } from "recompose";
 import { registerComponent, composeWithTracker, Components } from "@reactioncommerce/reaction-components";
-import { Meteor } from "meteor/meteor";
 import { Reaction } from "/client/api";
 
 const ProductsContainer = ({ isAdmin }) => {
@@ -17,7 +16,10 @@ ProductsContainer.propTypes = {
 };
 
 function composer(props, onData) {
-  const isAdmin = Reaction.hasPermission("createProduct", Meteor.userId());
+  const isAdmin = Reaction.isAuthorized({
+    keycloakAuthParams: null,
+    meteorAuthParams: ["createProduct", Reaction.getUserId()]
+  });
 
   onData(null, {
     isAdmin
