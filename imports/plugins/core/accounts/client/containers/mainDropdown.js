@@ -11,7 +11,7 @@ import MainDropdown from "../components/mainDropdown";
 function displayName(displayUser) {
   i18nextDep.depend();
 
-  const user = displayUser || Accounts.user();
+  const user = displayUser || Accounts.findOne({ userId: Reaction.getUserId() });
 
   if (user) {
     if (user.name) {
@@ -89,13 +89,15 @@ function handleChange(event, value) {
   }
 }
 
-const composer = ({ currentAccount }, onData) => {
+const composer = (props, onData) => {
+  const currentAccount = Accounts.findOne({ userId: Reaction.getUserId() });
   const userImage = getUserAvatar(currentAccount);
   const userName = displayName(currentAccount);
   const adminShortcuts = getAdminShortcutIcons();
   const { keycloakRealm, keycloakClientID, keycloakServerUrl, keycloakEnabled } = Meteor.settings.public;
 
   onData(null, {
+    currentAccount,
     adminShortcuts,
     userImage,
     userName,
